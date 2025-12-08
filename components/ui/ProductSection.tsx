@@ -67,7 +67,7 @@ export default function ProductSection({
         ) : (
           /* Empty State */
           <div className="flex flex-col items-center justify-center px-4">
-            <div className="relative mb-8 h-64 w-64">
+            <div className="relative mb-8 h-64 w-64 opacity-50">
               <Image
                 src="/no-auctions-in-progress.png"
                 alt="No auctions available"
@@ -84,10 +84,10 @@ export default function ProductSection({
             </p>
             <Link
               href="/danh-muc"
-              className="inline-flex items-center space-x-2 rounded-lg bg-black px-6 py-3 text-white transition-colors hover:bg-gray-800"
+              className="group inline-flex items-center space-x-2 rounded-lg bg-black px-6 py-3 text-white transition-all duration-300 hover:bg-gray-800"
             >
               <span className="font-semibold">Khám phá danh mục</span>
-              <FiArrowRight className="h-5 w-5" />
+              <FiArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         )}

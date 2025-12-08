@@ -12,14 +12,7 @@ import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  FiClock,
-  FiEye,
-  FiHome,
-  FiShoppingCart,
-  FiStar,
-  FiUser,
-} from "react-icons/fi";
+import { FiClock, FiEye, FiHome, FiShoppingCart } from "react-icons/fi";
 import { HiOutlineBell } from "react-icons/hi2";
 
 interface ProductDetailPageProps {
@@ -81,20 +74,23 @@ export default async function ProductDetailPage({
     const UserRating = ({ user }: { user: typeof product.seller }) => {
       const totalRatings = user.positiveRating + user.negativeRating;
       return (
-        <div className="flex items-center gap-2">
-          <FiUser className="h-4 w-4 text-gray-600" />
-          <span className="font-medium">{user.fullName}</span>
-          {totalRatings > 0 && (
-            <div className="flex items-center gap-1 text-sm">
-              <FiStar className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              <span className="font-medium text-green-600">
-                {user.ratingPercentage.toFixed(1)}%
-              </span>
-              <span className="text-gray-500">
-                ({user.positiveRating}👍 / {user.negativeRating}👎)
-              </span>
-            </div>
-          )}
+        <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black font-semibold text-white">
+            {user.fullName.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-gray-900">{user.fullName}</p>
+            {totalRatings > 0 && (
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-gray-900">
+                  {user.ratingPercentage.toFixed(1)}%
+                </span>
+                <span className="text-gray-500">
+                  ({user.positiveRating}👍 / {user.negativeRating}👎)
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       );
     };
@@ -108,7 +104,7 @@ export default async function ProductDetailPage({
               <li>
                 <Link
                   href="/"
-                  className="flex items-center gap-1 hover:text-blue-600"
+                  className="flex items-center gap-1 hover:text-black"
                 >
                   <FiHome className="inline h-4 w-4" />
                   Trang chủ
@@ -121,7 +117,7 @@ export default async function ProductDetailPage({
                     {" "}
                     <Link
                       href={`/danh-muc/${product.parentCategorySlug}`}
-                      className="hover:text-blue-600"
+                      className="hover:text-black"
                     >
                       {product.parentCategoryName}
                     </Link>
@@ -132,7 +128,7 @@ export default async function ProductDetailPage({
               <li>
                 <Link
                   href={`/danh-muc/${product.categorySlug}`}
-                  className="hover:text-blue-600"
+                  className="hover:text-black"
                 >
                   {product.categoryName}
                 </Link>
@@ -157,8 +153,8 @@ export default async function ProductDetailPage({
             {/* Right: Product Info */}
             <div className="space-y-6">
               {/* Title */}
-              <div className="rounded-lg bg-white p-6 shadow-sm">
-                <h1 className="mb-4 text-2xl font-bold text-gray-900">
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h1 className="mb-4 text-3xl font-bold text-gray-900">
                   {product.title}
                 </h1>
 
@@ -175,20 +171,28 @@ export default async function ProductDetailPage({
                 </div>
 
                 {/* Price Info */}
-                <div className="space-y-4 border-b pb-6">
-                  <div>
-                    <p className="mb-1 text-sm text-gray-600">Giá hiện tại</p>
-                    <p className="text-3xl font-bold text-blue-600">
+                <div className="space-y-4 border-b border-gray-200 pb-6">
+                  <div className="rounded-lg bg-gray-50 p-4">
+                    <p className="mb-2 text-sm font-medium text-gray-600">
+                      Giá hiện tại
+                    </p>
+                    <p className="text-4xl font-bold text-black">
                       {formatPrice(product.currentPrice)}
                     </p>
                   </div>
 
                   {product.hasBuyNow && product.buyNowPrice && (
-                    <div>
-                      <p className="mb-1 text-sm text-gray-600">Giá mua ngay</p>
-                      <p className="text-xl font-bold text-green-600">
+                    <div className="rounded-lg border-2 border-black bg-white p-4">
+                      <p className="mb-2 text-sm font-medium text-gray-600">
+                        Giá mua ngay
+                      </p>
+                      <p className="mb-2 text-2xl font-bold text-black">
                         {formatPrice(product.buyNowPrice)}
                       </p>
+                      <button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-black bg-white py-3 font-semibold text-black transition-all hover:scale-105 hover:bg-black hover:text-white">
+                        <FiShoppingCart className="h-5 w-5" />
+                        Mua ngay
+                      </button>
                     </div>
                   )}
 
@@ -209,19 +213,33 @@ export default async function ProductDetailPage({
                 </div>
 
                 {/* Time Remaining */}
-                <div className="border-b py-6">
-                  <div className="mb-2 flex items-center gap-2 text-gray-600">
-                    <FiClock className="h-4 w-4" />
-                    <span className="text-sm">Thời gian còn lại</span>
+                <div className="border-b border-gray-200 py-6">
+                  <div className="mb-3 flex items-center gap-2 text-gray-600">
+                    <FiClock className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      Thời gian còn lại
+                    </span>
                   </div>
-                  <p className="text-xl font-bold text-red-600">
-                    {product.isEnded ? "Đã kết thúc" : timeRemaining}
-                  </p>
+                  <div
+                    className={`rounded-lg p-3 ${product.isEnded ? "bg-gray-100" : "bg-black"}`}
+                  >
+                    <p
+                      className={`text-2xl font-bold ${product.isEnded ? "text-gray-600" : "text-white"}`}
+                    >
+                      {product.isEnded ? "Đã kết thúc" : timeRemaining}
+                    </p>
+                  </div>
                   {product.isAutoExtend && !product.isEnded && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      * Tự động gia hạn {autoExtendDurationMin} phút nếu có lượt
-                      đấu giá mới trong vòng {autoExtendTriggerMin} phút cuối
-                      cùng
+                    <p className="mt-3 text-xs text-gray-500">
+                      * Tự động gia hạn{" "}
+                      <span className="font-bold">
+                        {autoExtendDurationMin} phút
+                      </span>{" "}
+                      nếu có lượt đấu giá mới trong vòng{" "}
+                      <span className="font-bold">
+                        {autoExtendTriggerMin} phút
+                      </span>{" "}
+                      cuối cùng
                     </p>
                   )}
                 </div>
@@ -253,19 +271,12 @@ export default async function ProductDetailPage({
                 {/* Action Buttons */}
                 {!product.isEnded && (
                   <div className="space-y-3">
-                    <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 font-medium text-white transition-colors hover:bg-blue-700">
+                    <button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-black py-3 font-semibold text-white transition-all hover:scale-105 hover:bg-gray-800">
                       <HiOutlineBell className="h-5 w-5" />
                       Đặt giá ngay
                     </button>
 
-                    {product.hasBuyNow && (
-                      <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-3 font-medium text-white transition-colors hover:bg-green-700">
-                        <FiShoppingCart className="h-5 w-5" />
-                        Mua ngay
-                      </button>
-                    )}
-
-                    <button className="w-full rounded-lg border border-gray-300 py-3 font-medium text-gray-700 transition-colors hover:border-gray-400">
+                    <button className="w-full rounded-lg border-2 border-gray-300 py-3 font-semibold text-gray-700 transition-all hover:border-black hover:text-black">
                       Thêm vào yêu thích
                     </button>
                   </div>
@@ -273,7 +284,7 @@ export default async function ProductDetailPage({
               </div>
 
               {/* Additional Info */}
-              <div className="space-y-2 rounded-lg bg-white p-6 text-sm shadow-sm">
+              <div className="space-y-3 rounded-2xl border border-gray-200 bg-white p-6 text-sm shadow-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Ngày đăng</span>
                   <span className="font-medium">
@@ -303,6 +314,7 @@ export default async function ProductDetailPage({
                       year: "numeric",
                       hour: "2-digit",
                       minute: "2-digit",
+                      second: "2-digit",
                     })}
                   </span>
                 </div>
@@ -311,10 +323,10 @@ export default async function ProductDetailPage({
                     Cho phép người chưa đánh giá được tham gia đấu giá
                   </span>
                   <span
-                    className={`font-medium ${
+                    className={`font-semibold ${
                       product.allowUnratedBidders
-                        ? "text-green-600"
-                        : "text-red-600"
+                        ? "text-black"
+                        : "text-gray-400"
                     }`}
                   >
                     {product.allowUnratedBidders ? "Có" : "Không"}
@@ -325,8 +337,8 @@ export default async function ProductDetailPage({
           </div>
 
           {/* Description Section */}
-          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-bold text-gray-900">
+          <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+            <h2 className="mb-6 text-2xl font-bold text-gray-900">
               Mô tả sản phẩm
             </h2>
             <div
@@ -336,15 +348,15 @@ export default async function ProductDetailPage({
 
             {/* Description Logs */}
             {product.descriptionLogs.length > 0 && (
-              <div className="mt-8 border-t pt-8">
-                <h3 className="mb-4 text-lg font-bold text-gray-900">
+              <div className="mt-8 border-t border-gray-200 pt-8">
+                <h3 className="mb-6 text-xl font-bold text-gray-900">
                   Lịch sử cập nhật mô tả
                 </h3>
                 <div className="space-y-4">
                   {product.descriptionLogs.map((log) => (
                     <div
                       key={log.id}
-                      className="border-l-4 border-blue-500 py-2 pl-4"
+                      className="rounded-lg border-l-4 border-black bg-gray-50 py-3 pr-4 pl-4"
                     >
                       <p className="mb-1 text-sm text-gray-600">
                         ✏️{" "}
@@ -363,12 +375,12 @@ export default async function ProductDetailPage({
           </div>
 
           {/* Q&A Section */}
-          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-bold text-gray-900">
+          <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+            <h2 className="mb-6 text-2xl font-bold text-gray-900">
               Câu hỏi & Trả lời
             </h2>
             <div className="flex flex-col items-center justify-center py-8">
-              <div className="relative mb-6 h-48 w-48">
+              <div className="relative mb-6 h-48 w-48 opacity-50">
                 <Image
                   src="/no-questions.png"
                   alt="Không tìm thấy câu hỏi"
@@ -378,7 +390,7 @@ export default async function ProductDetailPage({
               </div>
               <p className="text-gray-500">Chưa có câu hỏi nào</p>
               {!product.isEnded && (
-                <button className="mt-4 cursor-pointer font-medium text-blue-600 hover:text-blue-700">
+                <button className="mt-6 cursor-pointer rounded-lg bg-black px-6 py-3 font-semibold text-white transition-all hover:scale-105 hover:bg-gray-800">
                   Đặt câu hỏi cho người bán
                 </button>
               )}
@@ -387,11 +399,11 @@ export default async function ProductDetailPage({
 
           {/* Related Products */}
           <div>
-            <h2 className="mb-6 text-2xl font-bold text-gray-900">
+            <h2 className="mb-8 text-3xl font-bold text-gray-900">
               Sản phẩm cùng chuyên mục
             </h2>
             {relatedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 {relatedProducts.map((relatedProduct) => (
                   <ProductCard
                     key={relatedProduct.id}
@@ -400,8 +412,8 @@ export default async function ProductDetailPage({
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center rounded-lg bg-white py-16 shadow-sm">
-                <div className="relative mb-6 h-48 w-48">
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white py-16 shadow-sm">
+                <div className="relative mb-6 h-48 w-48 opacity-50">
                   <Image
                     src="/no-products-found.png"
                     alt="Không tìm thấy sản phẩm"
@@ -409,7 +421,7 @@ export default async function ProductDetailPage({
                     className="object-contain"
                   />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="mb-2 text-xl font-bold text-gray-900">
                   Không có sản phẩm liên quan
                 </h3>
                 <p className="text-gray-600">

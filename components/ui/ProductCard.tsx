@@ -61,7 +61,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-100">
+    <div className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-100">
       <Link href={`/san-pham/${product.slug}`} className="relative block">
         <div className="relative aspect-square overflow-hidden bg-gray-100">
           {/* Product Image */}
@@ -69,18 +69,21 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.thumbnailUrl}
             alt={product.title}
             fill
-            className="object-cover transition-transform duration-300 hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
 
+          {/* Gradient Overlay on Hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
           {/* Badges */}
-          <div className="absolute top-2 left-2 flex gap-2">
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
             {product.isNew && (
-              <span className="rounded bg-black px-2 py-1 text-xs font-semibold text-white">
+              <span className="w-fit rounded-lg bg-black px-3 py-1 text-xs font-semibold text-white shadow-lg">
                 MỚI
               </span>
             )}
             {product.hasBuyNow && (
-              <span className="rounded bg-blue-600 px-2 py-1 text-xs font-semibold text-white">
+              <span className="w-fit rounded-lg bg-white px-3 py-1 text-xs font-semibold text-black shadow-lg">
                 MUA NGAY
               </span>
             )}
@@ -92,96 +95,122 @@ export default function ProductCard({ product }: ProductCardProps) {
               e.preventDefault();
               toggleWishlist();
             }}
-            className="absolute top-2 right-2 rounded-full bg-white p-2 shadow-md transition-colors hover:bg-gray-50"
+            className="absolute top-3 right-3 rounded-full bg-white/90 p-2.5 shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-white"
           >
             <FiHeart
-              className={`h-5 w-5 ${
-                isWishlisted ? "fill-red-500 text-red-500" : "text-gray-600"
+              className={`h-5 w-5 transition-colors ${
+                isWishlisted ? "fill-black text-black" : "text-gray-600"
               }`}
             />
           </button>
         </div>
 
         {/* Product Info */}
-        <div className="p-4">
+        <div className="p-5">
+          {/* Category */}
+          <p className="mb-2 text-xs font-medium tracking-wider text-gray-500 uppercase">
+            {product.categoryName}
+          </p>
+
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 font-semibold text-gray-900 transition-colors hover:text-blue-600">
+          <h3
+            className="mb-3 line-clamp-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-black"
+            title={product.title}
+          >
             {product.title}
           </h3>
 
-          {/* Category */}
-          <p className="mb-2 text-xs text-gray-500">{product.categoryName}</p>
-
           {/* Current Price */}
-          <div className="mb-3">
-            <p className="mb-1 text-xs text-gray-500">Giá hiện tại</p>
-            <p className="text-xl font-bold text-black">
+          <div className="mb-4">
+            <p className="mb-1 text-xs font-medium text-gray-500">
+              Giá hiện tại
+            </p>
+            <p className="text-2xl font-bold text-black">
               {formatPrice(product.currentPrice)}
             </p>
           </div>
 
+          {/* Divider */}
+          <div className="mb-4 border-t border-gray-100" />
+
           {/* Seller Info */}
-          <div className="mb-3 flex items-center justify-between text-sm text-gray-600">
-            <div className="flex items-end">
-              <span className="text-xs">Người bán: </span>
-              <span className="ml-1 translate-y-px font-medium">
-                {product.sellerName}
-              </span>
-              {product.sellerRating !== null && (
-                <span className="ml-1 text-xs text-green-600">
-                  ({product.sellerRating}%)
+          <div className="mb-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
+                {product.sellerName.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex flex-col">
+                <span
+                  className="text-xs font-medium text-gray-900"
+                  title={product.sellerName}
+                >
+                  {product.sellerName.length > 15
+                    ? product.sellerName.substring(0, 15) + "..."
+                    : product.sellerName}
                 </span>
-              )}
+                {product.sellerRating !== null && (
+                  <span className="text-xs text-gray-500">
+                    Đánh giá: {product.sellerRating}%
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Bids Count */}
-          <div className="mb-3 flex items-center text-sm text-gray-600">
-            <span>
-              {product.bidCount > 0
-                ? `${product.bidCount} lượt`
-                : "Chưa có lượt ra giá"}
-            </span>
-            {product.highestBidderName && (
-              <span className="ml-2 text-xs">
-                • Cao nhất: {product.highestBidderName}
+          <div className="mb-3 rounded-lg bg-gray-50 px-3 py-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium text-gray-900">
+                {product.bidCount > 0
+                  ? `${product.bidCount} lượt đấu giá`
+                  : "Chưa có lượt đấu giá"}
               </span>
+            </div>
+            {product.highestBidderName && (
+              <p className="mt-1 text-xs text-gray-600">
+                Cao nhất: {product.highestBidderName}
+              </p>
             )}
           </div>
 
           {/* Time Left */}
           <div
-            className={`mb-3 flex items-center gap-2 text-sm ${
-              isUrgent ? "font-semibold text-red-600" : "text-gray-600"
+            className={`mb-3 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold ${
+              isUrgent ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700"
             }`}
+            title={`Thời gian còn lại ${timeLeft}`}
           >
             <FiClock className="h-4 w-4" />
             <span>{timeLeft}</span>
           </div>
 
-          {/* Allow unrated bidders to bid on products? */}
-          <p className="mb-3 text-xs text-gray-600">
-            Cho phép người chưa có đánh giá:{" "}
-            <span
-              className={`font-semibold ${
-                product.allowUnratedBidders ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {product.allowUnratedBidders ? "Cho phép" : "Không"}
-            </span>
-          </p>
-
-          {/* Auto Extend */}
-          <p className="mb-3 text-xs text-gray-600">
-            * Tự động gia hạn:{" "}
-            <span
-              className={`font-semibold ${
-                product.autoExtend ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {product.autoExtend ? "Có" : "Không"}
-            </span>
-          </p>
+          {/* Additional Info */}
+          <div className="mb-4 space-y-2 text-xs">
+            <div className="flex items-start justify-between">
+              <span className="text-gray-600">
+                Cho phép người chưa có đánh giá đấu giá
+              </span>
+              <span
+                className={`font-semibold ${
+                  product.allowUnratedBidders
+                    ? "text-gray-900"
+                    : "text-gray-400"
+                }`}
+              >
+                {product.allowUnratedBidders ? "Cho phép" : "Không"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">Tự động gia hạn</span>
+              <span
+                className={`font-semibold ${
+                  product.autoExtend ? "text-gray-900" : "text-gray-400"
+                }`}
+              >
+                {product.autoExtend ? "Có" : "Không"}
+              </span>
+            </div>
+          </div>
 
           {/* Buy Now Button */}
           {product.hasBuyNow && product.buyNowPrice && (
