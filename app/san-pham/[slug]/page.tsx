@@ -266,13 +266,21 @@ export default async function ProductDetailPage({
                 <div className="flex justify-between">
                   <span className="text-gray-600">Ngày đăng</span>
                   <span className="font-medium">
-                    {new Date(product.createdAt).toLocaleDateString("vi-VN")}
+                    {new Date(product.createdAt).toLocaleDateString("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Ngày bắt đầu</span>
                   <span className="font-medium">
-                    {new Date(product.startTime).toLocaleDateString("vi-VN")}
+                    {new Date(product.startTime).toLocaleDateString("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -348,10 +356,18 @@ export default async function ProductDetailPage({
             <h2 className="mb-4 text-xl font-bold text-gray-900">
               Câu hỏi & Trả lời
             </h2>
-            <div className="py-8 text-center text-gray-500">
-              <p>Chưa có câu hỏi nào</p>
+            <div className="flex flex-col items-center justify-center py-8">
+              <div className="relative mb-6 h-48 w-48">
+                <Image
+                  src="/no-questions.png"
+                  alt="Không tìm thấy câu hỏi"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-gray-500">Chưa có câu hỏi nào</p>
               {!product.isEnded && (
-                <button className="mt-4 font-medium text-blue-600 hover:text-blue-700">
+                <button className="mt-4 cursor-pointer font-medium text-blue-600 hover:text-blue-700">
                   Đặt câu hỏi cho người bán
                 </button>
               )}
