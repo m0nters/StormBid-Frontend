@@ -4,23 +4,16 @@ import {
   ApiSuccessResponse,
   isApiSuccess,
 } from "@/types/api";
-import { getAccessToken } from "./config";
-
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
-export const API_VERSION = "/api/v1";
-export const API_FULL_URL = `${API_BASE_URL}${API_VERSION}`;
-
-/**
- * Enhanced fetch wrapper with Next.js caching and revalidation support
- * Use this for Server Components and when you need Next.js caching features
- */
+import { API_FULL_URL, clearAccessToken, getAccessToken } from "./config";
 
 interface FetchOptions extends RequestInit {
   /**
+   * Include JWT token in Authorization header
+   */
+  auth?: boolean;
+
+  /**
    * Next.js cache option
-   * - 'force-cache': Cache the response (default)
-   * - 'no-store': Don't cache, always fetch fresh data
    */
   cache?: RequestCache;
 
@@ -28,30 +21,19 @@ interface FetchOptions extends RequestInit {
    * Next.js revalidation options
    */
   next?: {
-    /**
-     * Revalidate cached data after X seconds
-     */
     revalidate?: number | false;
-
-    /**
-     * Tag for on-demand revalidation
-     */
     tags?: string[];
   };
-
-  /**
-   * Include JWT token in Authorization header
-   */
-  auth?: boolean;
 }
 
 /**
- * Generic fetch request function with Next.js enhancements
+ * Generic API request function
+ * Automatically handles response structure, errors, and authentication
  */
 async function request<T>(
   method: string,
   url: string,
-  options: FetchOptions = {}
+  options: FetchOptions = {},
 ): Promise<ApiSuccessResponse<T>> {
   const { auth = false, cache, next, ...fetchOptions } = options;
 
@@ -81,6 +63,14 @@ async function request<T>(
 
     const data: ApiResponse<T> = await response.json();
 
+    // Handle 401 Unauthorized - token expired or invalid
+    if (response.status === 401) {
+      clearAccessToken();
+      if (typeof window !== "undefined") {
+        window.location.href = "/dang-nhap";
+      }
+    }
+
     if (isApiSuccess(data)) {
       return data;
     }
@@ -99,7 +89,9 @@ async function request<T>(
       status: 0,
       error: "Network Error",
       message:
-        error instanceof Error ? error.message : "An unexpected error occurred",
+        error instanceof Error
+          ? error.message
+          : "Unable to connect to the server. Please check your internet connection.",
       timestamp: new Date().toISOString(),
     };
     throw networkError;
@@ -107,27 +99,22 @@ async function request<T>(
 }
 
 /**
- * Next.js enhanced fetch API client
- * Use this for Server Components and when you need caching/revalidation
+ * API Client Methods
  */
-export const fetchApi = {
+export const api = {
   /**
-   * GET request with caching support
+   * GET request
    *
    * @example
-   * // Cache for 1 hour
-   * const data = await fetchApi.get("/api/products", {
+   * // Without auth
+   * const data = await api.get("/products");
+   *
+   * // With auth
+   * const data = await api.get("/user/profile", { auth: true });
+   *
+   * // With Next.js caching
+   * const data = await api.get("/products", {
    *   next: { revalidate: 3600 }
-   * });
-   *
-   * // No cache, always fresh
-   * const data = await fetchApi.get("/api/products", {
-   *   cache: "no-store"
-   * });
-   *
-   * // With authentication
-   * const data = await fetchApi.get("/api/user/profile", {
-   *   auth: true
    * });
    */
   get: <T = any>(url: string, options?: FetchOptions) => {
@@ -177,7 +164,7 @@ export const fetchApi = {
   upload: <T = any>(
     url: string,
     formData: FormData,
-    options?: FetchOptions
+    options?: FetchOptions,
   ) => {
     const { headers, ...restOptions } = options || {};
     // Don't set Content-Type for FormData, browser will set it with boundary
@@ -192,4 +179,4 @@ export const fetchApi = {
   },
 };
 
-export default fetchApi;
+export default api;

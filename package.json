@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "clear-cache": "rmdir /s /q .next",
+    "clean-start": "npm run clear-cache && npm run dev"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.90.12",
-    "axios": "^1.13.2",
     "i18next": "^25.7.1",
     "i18next-browser-languagedetector": "^8.2.0",
     "next": "16.0.7",

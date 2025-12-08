@@ -1,5 +1,3 @@
-// API Response Types
-
 export interface ApiSuccessResponse<T = any> {
   success: true;
   status: number;
@@ -26,13 +24,13 @@ export type ApiResponse<T = any> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 // Helper type guards
 export function isApiSuccess<T>(
-  response: ApiResponse<T>
+  response: ApiResponse<T>,
 ): response is ApiSuccessResponse<T> {
   return response.success === true;
 }
 
 export function isApiError(
-  response: ApiResponse
+  response: ApiResponse,
 ): response is ApiErrorResponse {
   return response.success === false;
 }

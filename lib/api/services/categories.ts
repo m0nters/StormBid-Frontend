@@ -1,12 +1,12 @@
 import { CategoryResponse } from "@/types/category";
-import { fetchApi } from "../fetch";
+import { api } from "../fetch";
 
 /**
  * Get all categories
  * Use in Server Components with caching
  */
 export const getAllCategories = async () => {
-  const response = await fetchApi.get<CategoryResponse[]>("/categories", {
+  const response = await api.get<CategoryResponse[]>("/categories", {
     next: {
       revalidate: 3600, // Cache for 1 hour (categories don't change often)
       tags: ["categories"],
@@ -19,7 +19,7 @@ export const getAllCategories = async () => {
  * Get category by ID
  */
 export const getCategoryById = async (categoryId: number) => {
-  const response = await fetchApi.get<CategoryResponse>(
+  const response = await api.get<CategoryResponse>(
     `/categories/${categoryId}`,
     {
       next: {
@@ -35,7 +35,7 @@ export const getCategoryById = async (categoryId: number) => {
  * Get parent category of a specific category by its ID
  */
 export const getParentCategoryByCategoryId = async (categoryId: number) => {
-  const response = await fetchApi.get<CategoryResponse>(
+  const response = await api.get<CategoryResponse>(
     `/categories/${categoryId}/parent`,
     {
       next: {
@@ -51,7 +51,7 @@ export const getParentCategoryByCategoryId = async (categoryId: number) => {
  * Get sub-categories by parent ID
  */
 export const getSubCategories = async (parentId: number) => {
-  const response = await fetchApi.get<CategoryResponse[]>(
+  const response = await api.get<CategoryResponse[]>(
     `/categories/${parentId}/sub-categories`,
     {
       next: {
@@ -68,14 +68,11 @@ export const getSubCategories = async (parentId: number) => {
  * Perfect for navigation/header
  */
 export const getParentCategories = async () => {
-  const response = await fetchApi.get<CategoryResponse[]>(
-    "/categories/parents",
-    {
-      next: {
-        revalidate: 3600,
-        tags: ["parent-categories", "categories"],
-      },
+  const response = await api.get<CategoryResponse[]>("/categories/parents", {
+    next: {
+      revalidate: 3600,
+      tags: ["parent-categories", "categories"],
     },
-  );
+  });
   return response.data;
 };

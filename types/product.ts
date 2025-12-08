@@ -22,7 +22,6 @@ export interface ProductListResponse {
   hasBuyNow: boolean;
 }
 
-// Product Detail Types
 export interface UserBasicInfo {
   id: number;
   fullName: string;

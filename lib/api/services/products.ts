@@ -1,12 +1,12 @@
 import { ProductDetailResponse, ProductListResponse } from "@/types/product";
-import { fetchApi } from "../fetch";
+import { api } from "../fetch";
 
 /**
  * Get top 5 products with most bids
  * For home page "Phổ biến nhất" section
  */
 export const getTopMostBidsProducts = async () => {
-  const response = await fetchApi.get<ProductListResponse[]>(
+  const response = await api.get<ProductListResponse[]>(
     "/products/top/most-bids",
     {
       next: {
@@ -23,7 +23,7 @@ export const getTopMostBidsProducts = async () => {
  * For home page "Đấu giá cao cấp" section
  */
 export const getTopHighestPriceProducts = async () => {
-  const response = await fetchApi.get<ProductListResponse[]>(
+  const response = await api.get<ProductListResponse[]>(
     "/products/top/highest-price",
     {
       next: {
@@ -40,7 +40,7 @@ export const getTopHighestPriceProducts = async () => {
  * For home page "Sắp kết thúc" section
  */
 export const getTopEndingSoonProducts = async () => {
-  const response = await fetchApi.get<ProductListResponse[]>(
+  const response = await api.get<ProductListResponse[]>(
     "/products/top/ending-soon",
     {
       cache: "no-store", // Don't cache - time-sensitive data
@@ -54,7 +54,7 @@ export const getTopEndingSoonProducts = async () => {
  * For product detail page
  */
 export const getProductDetailBySlug = async (slug: string) => {
-  const response = await fetchApi.get<ProductDetailResponse>(
+  const response = await api.get<ProductDetailResponse>(
     `/products/slug/${slug}`,
     {
       cache: "no-store", // Don't cache - data changes frequently with bids
@@ -68,7 +68,7 @@ export const getProductDetailBySlug = async (slug: string) => {
  * For product detail page bottom section
  */
 export const getRelatedProducts = async (id: string | number) => {
-  const response = await fetchApi.get<ProductListResponse[]>(
+  const response = await api.get<ProductListResponse[]>(
     `/products/${id}/related`,
     {
       next: {

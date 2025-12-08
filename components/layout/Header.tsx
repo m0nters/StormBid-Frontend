@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthStore } from "@/store/authStore";
 import { CategoryResponse } from "@/types/category";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +14,8 @@ interface HeaderProps {
 export default function Header({ categories }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,13 +67,23 @@ export default function Header({ categories }: HeaderProps) {
           </form>
 
           {/* Right Side - Desktop */}
-          <Link
-            href="/dang-nhap"
-            className="flex items-center space-x-2 px-4 py-2 text-gray-700 transition-colors hover:text-black"
-          >
-            <FiUser className="h-5 w-5" />
-            <span>Đăng nhập</span>
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              href="/tai-khoan"
+              className="flex items-center space-x-2 px-4 py-2 text-gray-700 transition-colors hover:text-black"
+            >
+              <FiUser className="h-5 w-5" />
+              <span>{user?.fullName}</span>
+            </Link>
+          ) : (
+            <Link
+              href="/dang-nhap"
+              className="flex items-center space-x-2 px-4 py-2 text-gray-700 transition-colors hover:text-black"
+            >
+              <FiUser className="h-5 w-5" />
+              <span>Đăng nhập</span>
+            </Link>
+          )}
 
           {/* Mobile Menu Button */}
           <button
@@ -167,13 +180,23 @@ export default function Header({ categories }: HeaderProps) {
             </div>
 
             {/* Mobile Auth Buttons */}
-            <Link
-              href="/dang-nhap"
-              className="flex w-full items-center justify-center space-x-2 rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 hover:bg-gray-50"
-            >
-              <FiUser className="h-5 w-5" />
-              <span>Đăng nhập</span>
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                href="/tai-khoan"
+                className="flex w-full items-center justify-center space-x-2 rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 hover:bg-gray-50"
+              >
+                <FiUser className="h-5 w-5" />
+                <span>{user?.fullName}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/dang-nhap"
+                className="flex w-full items-center justify-center space-x-2 rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 hover:bg-gray-50"
+              >
+                <FiUser className="h-5 w-5" />
+                <span>Đăng nhập</span>
+              </Link>
+            )}
           </div>
         </div>
       )}

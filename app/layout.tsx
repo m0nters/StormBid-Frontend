@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { getAllCategories } from "@/lib/api";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
@@ -29,11 +30,13 @@ export default async function RootLayout({
   return (
     <html lang="vi">
       <body className={`${montserrat.className} font-sans antialiased`}>
-        <div className="flex min-h-screen flex-col">
-          <Header categories={categories} />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <AuthProvider>
+          <div className="flex min-h-screen flex-col">
+            <Header categories={categories} />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
