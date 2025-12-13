@@ -1,4 +1,5 @@
 import PageHero from "@/components/layout/PageHero";
+import Link from "next/link";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -123,12 +124,12 @@ export default function PrivacyPolicyPage() {
                     của mình. Tuy nhiên, việc vô hiệu hóa cookie có thể ảnh
                     hưởng đến khả năng sử dụng một số tính năng của nền tảng.
                     Xem thêm tại{" "}
-                    <a
+                    <Link
                       href="/chinh-sach-cookie"
                       className="text-blue-600 hover:underline"
                     >
                       Chính sách Cookie
-                    </a>
+                    </Link>
                     .
                   </p>
                 </div>

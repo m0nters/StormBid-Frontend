@@ -1,19 +1,28 @@
 "use client";
 
+import PasswordInput from "@/components/ui/PasswordInput";
 import { login } from "@/lib/api/services/auth";
 import { LoginFormData, loginSchema } from "@/lib/validations/auth";
 import { useAuthStore } from "@/store/authStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiArrowRight, FiLock, FiMail } from "react-icons/fi";
+import { FiArrowRight, FiMail } from "react-icons/fi";
 
 export default function LoginPage() {
   const router = useRouter();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const setAuth = useAuthStore((state) => state.setAuth);
   const [apiError, setApiError] = useState<string>("");
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
 
   const {
     register,
@@ -111,36 +120,19 @@ export default function LoginPage() {
               </div>
 
               {/* Password */}
-              <div>
-                <label
-                  htmlFor="password"
-                  className="mb-2 block text-sm font-medium text-gray-900"
-                >
-                  Mật khẩu
-                </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <FiLock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="password"
-                    type="password"
-                    {...register("password")}
-                    className={`block w-full rounded-lg border py-3 pr-4 pl-10 transition-all focus:ring-2 focus:outline-none ${
-                      errors.password
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:border-black focus:ring-black"
-                    }`}
-                    placeholder="••••••••"
-                    disabled={isSubmitting}
-                  />
-                </div>
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+              <PasswordInput
+                id="password"
+                label="Mật khẩu"
+                {...register("password")}
+                placeholder="••••••••"
+                disabled={isSubmitting}
+                error={errors.password?.message}
+                className={`${
+                  errors.password
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-black focus:ring-black"
+                }`}
+              />
 
               {/* Forgot password */}
               <div className="flex items-center justify-end">

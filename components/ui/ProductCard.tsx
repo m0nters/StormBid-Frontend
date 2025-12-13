@@ -88,12 +88,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Product Info */}
         <div className="p-5">
           {/* Category */}
-          <a
+          <Link
             href={`/danh-muc/${product.categorySlug}`}
-            className="mb-2 text-xs font-medium tracking-wider text-gray-500 uppercase hover:underline"
+            className="mb-2 text-xs font-medium tracking-wider text-gray-500 uppercase hover:text-black hover:underline"
           >
             {product.categoryName}
-          </a>
+          </Link>
 
           {/* Title */}
           <h3
@@ -109,7 +109,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             title={formatFullDateTime(product.createdAt)}
           >
             <FiClock className="h-3.5 w-3.5" />
-            <span>{formatDateForFeed(product.createdAt)}</span>
+            <span>Đã đăng: {formatDateForFeed(product.createdAt)}</span>
           </div>
 
           {/* Current Price */}
@@ -142,7 +142,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </span>
                 {product.sellerRating !== null && (
                   <span className="text-xs text-gray-500">
-                    Đánh giá: {product.sellerRating}%
+                    Đánh giá: {product.sellerRating.toFixed(2)}%
                   </span>
                 )}
               </div>
@@ -161,7 +161,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.highestBidderName && (
               <p className="mt-1 text-xs text-gray-600">
                 Cao nhất: {product.highestBidderName} (
-                {product.highestBidderRating}%)
+                {product.highestBidderRating?.toFixed(2)}%)
               </p>
             )}
           </div>
@@ -171,10 +171,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             className={`mb-3 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold ${
               isUrgent ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700"
             }`}
-            title={`${formatFullDateTime(product.endTime)}`}
+            title={`Sẽ kết thúc vào ${formatFullDateTime(product.endTime)}`}
           >
             <FiClock className="h-4 w-4" />
-            <span>{timeLeft}</span>
+            <span>Còn lại: {timeLeft}</span>
           </div>
 
           {/* Additional Info */}
